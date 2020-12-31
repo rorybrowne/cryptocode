@@ -7,7 +7,7 @@ try:
 except ImportError:
     from scrypt import hash as scrypt_hash
     def scrypt(password, salt=None, n=None, r=None, p=None, dklen=64):
-        return script_hash(password, salt=salt, N=n, r=r, p=p, buflen=dklen)
+        return scrypt_hash(password, salt=salt, N=n, r=r, p=p, buflen=dklen)
 
 def encrypt(message , password):
     plain_text = message
