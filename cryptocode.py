@@ -1,7 +1,14 @@
 from base64 import b64encode, b64decode
-import hashlib
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
+
+try:
+    from hashlib import scrypt
+except ImportError:
+    from scrypt import hash as scrypt_hash
+    def scrypt(password, salt=None, n=None, r=None, p=None, dklen=64):
+        return script_hash(password, salt=salt, N=n, r=r, p=p, buflen=dklen)
+
 def encrypt(message , password):
     plain_text = message
 
@@ -11,7 +18,7 @@ def encrypt(message , password):
 
     # use the Scrypt KDF to get a private key from the password
 
-    private_key = hashlib.scrypt(
+    private_key = scrypt(
         password.encode(),
         salt=salt,
         n=2 ** 14,
@@ -59,7 +66,7 @@ def decrypt(enc_dict, password):
 
         # generate the private key from the password and salt
 
-        private_key = hashlib.scrypt(
+        private_key = scrypt(
             password.encode(),
             salt=salt,
             n=2 ** 14,
